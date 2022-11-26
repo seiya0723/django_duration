@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>勉強時間ログ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="{% static 'bbs/js/index.js' %}"></script>
+
+
+</head>
+<body>
+
+    <h1 class="bg-primary text-white">勉強時間ログ</h1>
+
+
+    <main class="container">
+
+        <h2>普通のinputタグで入力</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="time" placeholder="00:00:00">
+            <textarea class="form-control" name="comment"></textarea>
+            <input type="submit" value="送信">
+        </form>
+
+
+        <h2>Selectタグで入力(Django側で調整)</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {# withを使った数値指定のループ #}
+            {# https://noauto-nolife.com/post/django-template-integer-for-loop/ #}
+
+            {% with hours=""|center:10 range=""|center:60 %}
+            <select name="hours">
+                {% for x in hours %}
+                <option value="{{ forloop.counter0 }}">{% if forloop.counter0 < 10 %}0{% endif %}{{ forloop.counter0 }}</option>
+                {% endfor %}
+            </select>
+            :
+            <select name="minutes">
+                {% for x in range %}
+                <option value="{{ forloop.counter0 }}">{% if forloop.counter0 < 10 %}0{% endif %}{{ forloop.counter0 }}</option>
+                {% endfor %}
+            </select>
+            :
+            <select name="seconds">
+                {% for x in range %}
+                <option value="{{ forloop.counter0 }}">{% if forloop.counter0 < 10 %}0{% endif %}{{ forloop.counter0 }}</option>
+                {% endfor %}
+            </select>
+            {% endwith %}
+
+            <textarea class="form-control" name="comment"></textarea>
+            <input type="submit" value="送信">
+        </form>
+
+        <h2>Selectタグで入力(JS(jQuery)側で調整してAjax送信)</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {# withを使った数値指定のループ #}
+            {# https://noauto-nolife.com/post/django-template-integer-for-loop/ #}
+
+            {% with hours=""|center:10 range=""|center:60 %}
+            <select name="hours">
+                {% for x in hours %}
+                <option value="{{ forloop.counter0 }}">{% if forloop.counter0 < 10 %}0{% endif %}{{ forloop.counter0 }}</option>
+                {% endfor %}
+            </select>
+            :
+            <select name="minutes">
+                {% for x in range %}
+                <option value="{{ forloop.counter0 }}">{% if forloop.counter0 < 10 %}0{% endif %}{{ forloop.counter0 }}</option>
+                {% endfor %}
+            </select>
+            :
+            <select name="seconds">
+                {% for x in range %}
+                <option value="{{ forloop.counter0 }}">{% if forloop.counter0 < 10 %}0{% endif %}{{ forloop.counter0 }}</option>
+                {% endfor %}
+            </select>
+            {% endwith %}
+
+            <textarea class="form-control" name="comment"></textarea>
+            <input id="submit" type="button" value="送信">
+        </form>
+
+
+
+
+
+
+
+        {% for topic in topics %}
+        <div class="border">
+            <div>勉強時間: {{ topic.time }}</div>
+            <div>{{ topic.comment }}</div>
+        </div>
+        {% endfor %}
+
+    </main>
+</body>
+</html>
